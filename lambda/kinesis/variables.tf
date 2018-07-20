@@ -30,9 +30,12 @@ variable "timeout" {
   default = 3
 }
 
+variable "vpc_config_enabled" {
+  default = false
+}
+
 variable "vpc_config" {
-  type    = "list"
-  default = []
+  default = {}
 }
 
 variable "extra_policy_statements" {

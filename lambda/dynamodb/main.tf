@@ -30,4 +30,5 @@ module "default" {
   function_name           = "${var.function_name}"
   vpc_config              = "${var.vpc_config}"
   extra_policy_statements = "${compact(concat(local.dynamodb_policy,var.extra_policy_statements))}"
+  vpc_config_enabled      = "${var.vpc_config_enabled}"
 }

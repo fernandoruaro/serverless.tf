@@ -15,4 +15,5 @@ module "default" {
   function_name           = "${var.function_name}"
   extra_policy_statements = "${var.extra_policy_statements}"
   vpc_config              = "${var.vpc_config}"
+  vpc_config_enabled      = "${var.vpc_config_enabled}"
 }

@@ -54,15 +54,15 @@ resource "aws_iam_policy" "default" {
 EOF
 }
 
-## VPC POLICY: If the lambda runs inside a vpc, it needs specific policies to attache itself to the vpc ##
+# VPC POLICY: If the lambda runs inside a vpc, it needs specific policies to attache itself to the vpc ##
 resource "aws_iam_role_policy_attachment" "vpc" {
-  count      = "${length(var.vpc_config) == 0 ? 0 : 1}"
+  count      = "${var.vpc_config_enabled ? 1 : 0}"
   role       = "${aws_iam_role.lambda.name}"
   policy_arn = "${aws_iam_policy.vpc.arn}"
 }
 
 resource "aws_iam_policy" "vpc" {
-  count       = "${length(var.vpc_config) == 0 ? 0 : 1}"
+  count       = "${var.vpc_config_enabled ? 1 : 0}"
   name        = "${var.function_name}-vpc"
   path        = "/"
   description = "VPC Policy"
@@ -92,6 +92,9 @@ data "archive_file" "zip" {
 }
 
 resource "aws_lambda_function" "lambda" {
+  count = "${var.vpc_config_enabled ? 0 : 1}"
+
+  count            = ""
   filename         = "${data.archive_file.zip.output_path}"
   function_name    = "${var.function_name}"
   role             = "${aws_iam_role.lambda.arn}"
@@ -104,13 +107,38 @@ resource "aws_lambda_function" "lambda" {
     variables = "${var.variables}"
   }
 
-  vpc_config = "${var.vpc_config}"
+  dead_letter_config {
+    target_arn = "${aws_sqs_queue.dead_letter.arn}"
+  }
+
+  depends_on = ["aws_iam_role_policy_attachment.default"]
+}
+
+resource "aws_lambda_function" "lambda_vpc" {
+  count = "${var.vpc_config_enabled ? 1 : 0}"
+
+  filename         = "${data.archive_file.zip.output_path}"
+  function_name    = "${var.function_name}"
+  role             = "${aws_iam_role.lambda.arn}"
+  handler          = "${var.handler}"
+  source_code_hash = "${data.archive_file.zip.output_md5}"
+  runtime          = "${var.runtime}"
+  timeout          = "${var.timeout}"
+
+  environment {
+    variables = "${var.variables}"
+  }
+
+  vpc_config {
+    security_group_ids = ["${var.vpc_config["security_group_ids"]}"]
+    subnet_ids         = ["${var.vpc_config["subnet_ids"]}"]
+  }
 
   dead_letter_config {
     target_arn = "${aws_sqs_queue.dead_letter.arn}"
   }
 
-  depends_on = ["aws_iam_policy.default"]
+  depends_on = ["aws_iam_role_policy_attachment.default", "aws_iam_role_policy_attachment.vpc"]
 }
 
 resource "aws_sqs_queue" "dead_letter" {
