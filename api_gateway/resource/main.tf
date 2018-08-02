@@ -1,3 +1,7 @@
+locals {
+  CORS_ALLOWED_HEADERS = ["Content-Type", "X-Amz-Date", "Authorization", "X-Api-Key", "X-Amz-Security-Token"]
+}
+
 resource "aws_api_gateway_resource" "resource" {
   rest_api_id = "${var.rest_api_id}"
   parent_id   = "${var.parent_id}"
@@ -32,7 +36,7 @@ resource "aws_api_gateway_integration_response" "options" {
   status_code = "200"
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Headers" = "'${join(",",compact(concat(local.CORS_ALLOWED_HEADERS,var.extra_cors_headers)))}'"
     "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS,GET,PUT,PATCH,DELETE'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
