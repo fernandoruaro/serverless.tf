@@ -1,7 +1,7 @@
 resource "aws_api_gateway_method" "request" {
   rest_api_id        = "${var.rest_api_id}"
   resource_id        = "${var.resource_id}"
-  authorization      = "${var.authorizer_id == "" ? "NONE" : "CUSTOM"}"
+  authorization      = "${var.authorization != "" ? var.authorization : (var.authorizer_id == "" ? "NONE" : "CUSTOM") }"
   http_method        = "${var.http_request_method}"
   authorizer_id      = "${var.authorizer_id}"
   api_key_required   = "${var.api_key_required}"

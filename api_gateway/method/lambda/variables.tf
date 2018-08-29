@@ -2,6 +2,10 @@ variable "rest_api_id" {}
 variable "resource_id" {}
 variable "http_request_method" {}
 
+variable "authorization" {
+  default = ""
+}
+
 variable "authorizer_id" {
   default = ""
 }
