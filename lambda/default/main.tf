@@ -99,7 +99,7 @@ resource "aws_lambda_function" "lambda" {
   function_name    = "${var.function_name}"
   role             = "${aws_iam_role.lambda.arn}"
   handler          = "${var.handler}"
-  source_code_hash = "${data.archive_file.zip.output_md5}"
+  source_code_hash = "${base64sha256(file("${data.archive_file.zip.output_path}"))}"
   runtime          = "${var.runtime}"
   timeout          = "${var.timeout}"
 
@@ -121,7 +121,7 @@ resource "aws_lambda_function" "lambda_vpc" {
   function_name    = "${var.function_name}"
   role             = "${aws_iam_role.lambda.arn}"
   handler          = "${var.handler}"
-  source_code_hash = "${data.archive_file.zip.output_md5}"
+  source_code_hash = "${base64sha256(file("${data.archive_file.zip.output_path}"))}"
   runtime          = "${var.runtime}"
   timeout          = "${var.timeout}"
 
