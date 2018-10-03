@@ -3,7 +3,7 @@ locals {
 {
       "Effect": "Allow",
       "Action": ["s3:GetObject"],
-      "Resource": "${var.bucket_arn}"
+      "Resource": "arn:aws:s3:::${var.bucket_name}/*"
 }
 EOF
   ]
