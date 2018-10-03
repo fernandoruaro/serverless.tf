@@ -1,1 +1,1 @@
-module.handler = () => console.log('Test')
+module.exports.handler = () => console.log('Test')
