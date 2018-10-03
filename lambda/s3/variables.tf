@@ -1,11 +1,3 @@
-variable "kinesis_stream_arn" {
-  description = "The stream arn to be processed"
-}
-
-variable "batch_size" {
-  default = 200
-}
-
 variable "function_name" {
   description = "The name of the function"
 }
@@ -48,6 +40,7 @@ variable "runtime" {
 }
 
 variable "bucket_name" {}
+
 variable "bucket_arn" {}
 
 variable "bucket_notification_extension" {}
