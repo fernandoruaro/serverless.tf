@@ -16,4 +16,5 @@ module "default" {
   extra_policy_statements = "${var.extra_policy_statements}"
   vpc_config              = "${var.vpc_config}"
   vpc_config_enabled      = "${var.vpc_config_enabled}"
+  runtime                 = "${var.runtime}"
 }
