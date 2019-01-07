@@ -102,6 +102,7 @@ resource "aws_lambda_function" "lambda" {
   source_code_hash = "${base64sha256(file("${data.archive_file.zip.output_path}"))}"
   runtime          = "${var.runtime}"
   timeout          = "${var.timeout}"
+  memory_size      = "${var.memory_size}"
 
   environment {
     variables = "${var.variables}"
@@ -124,6 +125,7 @@ resource "aws_lambda_function" "lambda_vpc" {
   source_code_hash = "${base64sha256(file("${data.archive_file.zip.output_path}"))}"
   runtime          = "${var.runtime}"
   timeout          = "${var.timeout}"
+  memory_size      = "${var.memory_size}"
 
   environment {
     variables = "${var.variables}"

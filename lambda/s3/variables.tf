@@ -44,3 +44,7 @@ variable "bucket_name" {}
 variable "bucket_arn" {}
 
 variable "bucket_notification_extension" {}
+
+variable "memory_size" {
+  default = 128
+}

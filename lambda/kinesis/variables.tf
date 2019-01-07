@@ -46,3 +46,7 @@ variable "extra_policy_statements" {
 variable "runtime" {
   default = "nodejs8.10"
 }
+
+variable "memory_size" {
+  default = 128
+}

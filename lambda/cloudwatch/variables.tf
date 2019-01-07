@@ -42,3 +42,7 @@ variable "runtime" {
 variable "schedule_expression" {
   default = "rate(1 hour)"
 }
+
+variable "memory_size" {
+  default = 128
+}

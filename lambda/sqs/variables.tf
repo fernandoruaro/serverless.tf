@@ -44,3 +44,7 @@ variable "sqs_arn" {}
 variable "batch_size" {
   default = 10
 }
+
+variable "memory_size" {
+  default = 128
+}

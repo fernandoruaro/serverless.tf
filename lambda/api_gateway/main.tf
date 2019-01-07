@@ -17,4 +17,5 @@ module "default" {
   vpc_config              = "${var.vpc_config}"
   vpc_config_enabled      = "${var.vpc_config_enabled}"
   runtime                 = "${var.runtime}"
+  memory_size             = "${var.memory_size}"
 }

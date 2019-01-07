@@ -32,4 +32,5 @@ module "default" {
   extra_policy_statements = "${compact(concat(local.dynamodb_policy,var.extra_policy_statements))}"
   vpc_config_enabled      = "${var.vpc_config_enabled}"
   runtime                 = "${var.runtime}"
+  memory_size             = "${var.memory_size}"
 }
