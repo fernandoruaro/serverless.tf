@@ -103,6 +103,7 @@ resource "aws_lambda_function" "lambda" {
   runtime          = "${var.runtime}"
   timeout          = "${var.timeout}"
   memory_size      = "${var.memory_size}"
+  publish          = "${var.provisioned_concurrent_executions > 0}"
 
   environment {
     variables = "${var.variables}"
@@ -126,6 +127,7 @@ resource "aws_lambda_function" "lambda_vpc" {
   runtime          = "${var.runtime}"
   timeout          = "${var.timeout}"
   memory_size      = "${var.memory_size}"
+  publish          = "${var.provisioned_concurrent_executions > 0}"
 
   environment {
     variables = "${var.variables}"
@@ -147,4 +149,11 @@ resource "aws_sqs_queue" "dead_letter" {
   name                      = "lambda-${var.function_name}-dead-letter"
   message_retention_seconds = 604800
   receive_wait_time_seconds = 20
+}
+
+resource "aws_lambda_provisioned_concurrency_config" "lambda_provisioned_concurrency_config" {
+  count      = "${var.provisioned_concurrent_executions > 0 ? 1 : 0}"
+  function_name                     = "${element(concat(aws_lambda_function.lambda.*.function_name, aws_lambda_function.lambda_vpc.*.function_name),0)}"
+  provisioned_concurrent_executions = "${var.provisioned_concurrent_executions}"
+  qualifier                         = "${element(concat(aws_lambda_function.lambda.*.version, aws_lambda_function.lambda_vpc.*.version),0)}"
 }

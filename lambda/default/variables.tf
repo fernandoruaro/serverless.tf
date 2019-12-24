@@ -42,3 +42,7 @@ variable "runtime" {
 variable "memory_size" {
   default = 128
 }
+
+variable "provisioned_concurrent_executions" {
+  default = 0
+}

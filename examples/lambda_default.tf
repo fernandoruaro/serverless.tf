@@ -6,6 +6,16 @@ module "lambda_default_simple" {
   path          = "./code"
 }
 
+module "lambda_default_concurrent" {
+  source = "../lambda/default"
+
+  function_name = "lambda-default-concurrent"
+  handler       = "index.handler"
+  path          = "./code"
+  provisioned_concurrent_executions = 1
+}
+
+
 module "lambda_default_policy" {
   source = "../lambda/default"
 
