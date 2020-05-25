@@ -48,3 +48,7 @@ variable "batch_size" {
 variable "memory_size" {
   default = 128
 }
+
+variable "reserved_concurrent_executions" {
+  default = -1
+}

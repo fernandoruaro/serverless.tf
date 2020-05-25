@@ -94,16 +94,17 @@ data "archive_file" "zip" {
 resource "aws_lambda_function" "lambda" {
   count = "${var.vpc_config_enabled ? 0 : 1}"
 
-  count            = ""
-  filename         = "${data.archive_file.zip.output_path}"
-  function_name    = "${var.function_name}"
-  role             = "${aws_iam_role.lambda.arn}"
-  handler          = "${var.handler}"
-  source_code_hash = "${base64sha256(file("${data.archive_file.zip.output_path}"))}"
-  runtime          = "${var.runtime}"
-  timeout          = "${var.timeout}"
-  memory_size      = "${var.memory_size}"
-  publish          = "${var.provisioned_concurrent_executions > 0}"
+  count                          = ""
+  filename                       = "${data.archive_file.zip.output_path}"
+  function_name                  = "${var.function_name}"
+  role                           = "${aws_iam_role.lambda.arn}"
+  handler                        = "${var.handler}"
+  source_code_hash               = "${base64sha256(file("${data.archive_file.zip.output_path}"))}"
+  runtime                        = "${var.runtime}"
+  timeout                        = "${var.timeout}"
+  memory_size                    = "${var.memory_size}"
+  publish                        = "${var.provisioned_concurrent_executions > 0}"
+  reserved_concurrent_executions = "${var.reserved_concurrent_executions}"
 
   environment {
     variables = "${var.variables}"
@@ -119,15 +120,16 @@ resource "aws_lambda_function" "lambda" {
 resource "aws_lambda_function" "lambda_vpc" {
   count = "${var.vpc_config_enabled ? 1 : 0}"
 
-  filename         = "${data.archive_file.zip.output_path}"
-  function_name    = "${var.function_name}"
-  role             = "${aws_iam_role.lambda.arn}"
-  handler          = "${var.handler}"
-  source_code_hash = "${base64sha256(file("${data.archive_file.zip.output_path}"))}"
-  runtime          = "${var.runtime}"
-  timeout          = "${var.timeout}"
-  memory_size      = "${var.memory_size}"
-  publish          = "${var.provisioned_concurrent_executions > 0}"
+  filename                       = "${data.archive_file.zip.output_path}"
+  function_name                  = "${var.function_name}"
+  role                           = "${aws_iam_role.lambda.arn}"
+  handler                        = "${var.handler}"
+  source_code_hash               = "${base64sha256(file("${data.archive_file.zip.output_path}"))}"
+  runtime                        = "${var.runtime}"
+  timeout                        = "${var.timeout}"
+  memory_size                    = "${var.memory_size}"
+  publish                        = "${var.provisioned_concurrent_executions > 0}"
+  reserved_concurrent_executions = "${var.reserved_concurrent_executions}"
 
   environment {
     variables = "${var.variables}"
@@ -152,7 +154,7 @@ resource "aws_sqs_queue" "dead_letter" {
 }
 
 resource "aws_lambda_provisioned_concurrency_config" "lambda_provisioned_concurrency_config" {
-  count      = "${var.provisioned_concurrent_executions > 0 ? 1 : 0}"
+  count                             = "${var.provisioned_concurrent_executions > 0 ? 1 : 0}"
   function_name                     = "${element(concat(aws_lambda_function.lambda.*.function_name, aws_lambda_function.lambda_vpc.*.function_name),0)}"
   provisioned_concurrent_executions = "${var.provisioned_concurrent_executions}"
   qualifier                         = "${element(concat(aws_lambda_function.lambda.*.version, aws_lambda_function.lambda_vpc.*.version),0)}"

@@ -48,3 +48,7 @@ variable "bucket_notification_extension" {}
 variable "memory_size" {
   default = 128
 }
+
+variable "reserved_concurrent_executions" {
+  default = -1
+}

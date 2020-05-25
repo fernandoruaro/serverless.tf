@@ -46,3 +46,7 @@ variable "memory_size" {
 variable "provisioned_concurrent_executions" {
   default = 0
 }
+
+variable "reserved_concurrent_executions" {
+  default = -1
+}
