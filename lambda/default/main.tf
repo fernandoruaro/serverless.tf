@@ -94,7 +94,6 @@ data "archive_file" "zip" {
 resource "aws_lambda_function" "lambda" {
   count = "${var.vpc_config_enabled ? 0 : 1}"
 
-  count                          = ""
   filename                       = "${data.archive_file.zip.output_path}"
   function_name                  = "${var.function_name}"
   role                           = "${aws_iam_role.lambda.arn}"
