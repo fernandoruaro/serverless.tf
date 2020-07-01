@@ -103,7 +103,7 @@ resource "aws_lambda_function" "lambda" {
   runtime                        = "${var.runtime}"
   timeout                        = "${var.timeout}"
   memory_size                    = "${var.memory_size}"
-  publish                        = "${var.provisioned_concurrent_executions > 0}"
+  publish                        = "${var.publish || var.provisioned_concurrent_executions > 0}"
   reserved_concurrent_executions = "${var.reserved_concurrent_executions}"
 
   environment {

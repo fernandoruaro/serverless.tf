@@ -50,3 +50,7 @@ variable "provisioned_concurrent_executions" {
 variable "reserved_concurrent_executions" {
   default = -1
 }
+
+variable "publish" {
+  default = false
+}
