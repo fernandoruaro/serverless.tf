@@ -1,3 +1,7 @@
+locals {
+  sns_policy = []
+}
+
 resource "aws_lambda_permission" "lambda" {
 
   statement_id = "AllowExecutionFromSNS"
@@ -23,7 +27,7 @@ module "default" {
   handler                        = "${var.handler}"
   function_name                  = "${var.function_name}"
   vpc_config                     = "${var.vpc_config}"
-  extra_policy_statements        = "${var.extra_policy_statements}"
+  extra_policy_statements        = "${compact(concat(local.sns_policy,var.extra_policy_statements))}"
   vpc_config_enabled             = "${var.vpc_config_enabled}"
   runtime                        = "${var.runtime}"
   reserved_concurrent_executions = "${var.reserved_concurrent_executions}"
