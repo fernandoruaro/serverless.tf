@@ -7,16 +7,6 @@ resource "aws_lambda_permission" "lambda" {
   source_arn = "${var.topic_arn}"
 }
 
-resource "aws_s3_bucket_notification" "lambda" {
-  bucket = "${var.bucket_name}"
-
-  lambda_function {
-    id                  = "${var.bucket_name}-${module.default.lambda_function_name}"
-    lambda_function_arn = "${module.default.lambda_arn}"
-    events              = ["s3:ObjectCreated:*", "s3:ObjectRemoved:*"]
-    filter_suffix       = "${var.bucket_notification_extension}"
-  }
-}
 
 resource "aws_sns_topic_subscription" "lambda" {
   topic_arn = "${var.topic_arn}"
