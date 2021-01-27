@@ -6,7 +6,7 @@ resource "aws_lambda_event_source_mapping" "lambda" {
   event_source_arn  = "${var.dynamodb_stream_arn}"
   enabled           = true
   function_name     = "${module.default.lambda_arn}"
-  starting_position = "TRIM_HORIZON"
+  starting_position = "${var.starting_position}"
 }
 
 locals {
