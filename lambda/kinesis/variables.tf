@@ -54,3 +54,8 @@ variable "memory_size" {
 variable "reserved_concurrent_executions" {
   default = -1
 }
+
+variable "layers" {
+  type    = "list"
+  default = []
+}

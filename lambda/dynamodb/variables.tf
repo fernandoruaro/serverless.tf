@@ -58,3 +58,8 @@ variable "reserved_concurrent_executions" {
 variable "starting_position" {
   default = "TRIM_HORIZON"
 }
+
+variable "layers" {
+  type    = "list"
+  default = []
+}

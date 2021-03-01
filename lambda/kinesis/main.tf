@@ -31,4 +31,5 @@ module "default" {
   runtime                        = "${var.runtime}"
   memory_size                    = "${var.memory_size}"
   reserved_concurrent_executions = "${var.reserved_concurrent_executions}"
+  layers                         = "[${var.layers}]"
 }

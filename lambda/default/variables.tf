@@ -54,3 +54,8 @@ variable "reserved_concurrent_executions" {
 variable "publish" {
   default = false
 }
+
+variable "layers" {
+  type    = "list"
+  default = []
+}

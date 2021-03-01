@@ -20,4 +20,5 @@ module "default" {
   memory_size                       = "${var.memory_size}"
   provisioned_concurrent_executions = "${var.provisioned_concurrent_executions}"
   reserved_concurrent_executions    = "${var.reserved_concurrent_executions}"
+  layers                            = "[${var.layers}]"
 }
