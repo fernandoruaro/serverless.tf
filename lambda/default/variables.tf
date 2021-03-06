@@ -4,6 +4,17 @@ variable "function_name" {
 
 variable "path" {
   description = "The function's folder (the folder will be sent as the code for the lambda)"
+  default = ""
+}
+
+variable "s3_bucket" {
+  description = "S3 bucket of the function"
+  default = ""
+}
+
+variable "s3_key" {
+  description = "S3 key of the function"
+  default = ""
 }
 
 variable "handler" {

@@ -21,6 +21,8 @@ module "default" {
   source = "../default"
 
   path                           = "${var.path}"
+  s3_bucket                      = "${var.s3_bucket}"
+  s3_key                         = "${var.s3_key}"
   timeout                        = "${var.timeout}"
   variables                      = "${var.variables}"
   handler                        = "${var.handler}"
