@@ -96,13 +96,13 @@ data "archive_file" "zip" {
 resource "aws_lambda_function" "lambda" {
   count = "${var.vpc_config_enabled ? 0 : 1}"
 
-  filename                       = "${var.path == "" ? "" : element(data.archive_file.zip.*.output_path,0)}"
+  filename                       = "${var.path == "" ? null : element(data.archive_file.zip.*.output_path,0)}"
   function_name                  = "${var.function_name}"
   role                           = "${aws_iam_role.lambda.arn}"
   handler                        = "${var.handler}"
   source_code_hash               = "${base64sha256(var.path == "" ? var.s3_key : file("${element(data.archive_file.zip.*.output_path,0)}"))}"
-  s3_bucket                      = "${var.s3_bucket}"
-  s3_key                         = "${var.s3_key}"
+  s3_bucket                      = "${var.s3_bucket == "" ? null : var.s3_bucket}"
+  s3_key                         = "${var.s3_key == "" ? null : var.s3_key}"
   runtime                        = "${var.runtime}"
   timeout                        = "${var.timeout}"
   memory_size                    = "${var.memory_size}"
@@ -125,13 +125,13 @@ resource "aws_lambda_function" "lambda" {
 resource "aws_lambda_function" "lambda_vpc" {
   count = "${var.vpc_config_enabled ? 1 : 0}"
 
-  filename                       = "${var.path == "" ? "" : element(data.archive_file.zip.*.output_path,0)}"
+  filename                       = "${var.path == "" ? null : element(data.archive_file.zip.*.output_path,0)}"
   function_name                  = "${var.function_name}"
   role                           = "${aws_iam_role.lambda.arn}"
   handler                        = "${var.handler}"
   source_code_hash               = "${base64sha256(var.path == "" ? var.s3_key : file("${element(data.archive_file.zip.*.output_path,0)}"))}"
-  s3_bucket                      = "${var.s3_bucket}"
-  s3_key                         = "${var.s3_key}"
+  s3_bucket                      = "${var.s3_bucket == "" ? null : var.s3_bucket}"
+  s3_key                         = "${var.s3_key == "" ? null : var.s3_key}"
   runtime                        = "${var.runtime}"
   timeout                        = "${var.timeout}"
   memory_size                    = "${var.memory_size}"
