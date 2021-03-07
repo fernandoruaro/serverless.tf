@@ -95,17 +95,17 @@ data "archive_file" "zip" {
   output_path = ".terraform/zips/${var.function_name}.zip"
 }
 
-resource "aws_lambda_function" "lambda" {
-  filename                       = "${data.archive_file.zip.output_path}"
-  function_name                  = "${var.function_name}"
-  role                           = "${aws_iam_role.lambda.arn}"
-  handler                        = "${var.handler}"
+resource "aws_lambda_function" "default" {
+  filename                       = data.archive_file.zip.output_path
+  function_name                  = var.function_name
+  role                           = aws_iam_role.lambda.arn
+  handler                        = var.handler
   source_code_hash               = filebase64sha256(data.archive_file.zip.output_path)
-  runtime                        = "${var.runtime}"
-  timeout                        = "${var.timeout}"
-  memory_size                    = "${var.memory_size}"
-  publish                        = "${var.publish || var.provisioned_concurrent_executions > 0}"
-  reserved_concurrent_executions = "${var.reserved_concurrent_executions}"
+  runtime                        = var.runtime
+  timeout                        = var.timeout
+  memory_size                    = var.memory_size
+  publish                        = var.publish || var.provisioned_concurrent_executions > 0
+  reserved_concurrent_executions = var.reserved_concurrent_executions
   layers                         = var.layers
 
 
@@ -137,7 +137,7 @@ resource "aws_sqs_queue" "dead_letter" {
 
 resource "aws_lambda_provisioned_concurrency_config" "lambda_provisioned_concurrency_config" {
   count                             = var.provisioned_concurrent_executions > 0 ? 1 : 0
-  function_name                     = aws_lambda_function.lambda.function_name
+  function_name                     = aws_lambda_function.default.function_name
   provisioned_concurrent_executions = var.provisioned_concurrent_executions
-  qualifier                         = aws_lambda_function.lambda.version
+  qualifier                         = aws_lambda_function.default.version
 }
