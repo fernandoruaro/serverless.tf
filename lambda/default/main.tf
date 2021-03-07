@@ -131,7 +131,7 @@ resource "aws_lambda_function" "lambda_vpc" {
   memory_size                    = "${var.memory_size}"
   publish                        = "${var.provisioned_concurrent_executions > 0}"
   reserved_concurrent_executions = "${var.reserved_concurrent_executions}"
-  layers                         = ["${var.layers}"]
+  layers                         = var.layers
 
   environment {
     variables = "${var.variables}"
