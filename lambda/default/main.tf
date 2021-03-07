@@ -96,11 +96,13 @@ data "archive_file" "zip" {
 }
 
 resource "aws_lambda_function" "default" {
-  filename                       = data.archive_file.zip.output_path
+  filename                       = var.path ? data.archive_file.zip.output_path : null
+  s3_bucket                      = var.s3_bucket
+  s3_key                         = var.s3_key
   function_name                  = var.function_name
   role                           = aws_iam_role.lambda.arn
   handler                        = var.handler
-  source_code_hash               = filebase64sha256(data.archive_file.zip.output_path)
+  source_code_hash               = var.path ? filebase64sha256(data.archive_file.zip.output_path) : sha256(var.s3_key)
   runtime                        = var.runtime
   timeout                        = var.timeout
   memory_size                    = var.memory_size
