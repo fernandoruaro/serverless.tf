@@ -28,6 +28,7 @@ variable "vpc_config_enabled" {
 
 variable "vpc_config" {
   default = {}
+  type = map(list(string))
 }
 
 variable "extra_policy_statements" {

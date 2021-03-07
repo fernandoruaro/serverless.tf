@@ -138,8 +138,8 @@ resource "aws_lambda_function" "lambda_vpc" {
   }
 
   vpc_config {
-    security_group_ids = ["${var.vpc_config["security_group_ids"]}"]
-    subnet_ids         = ["${var.vpc_config["subnet_ids"]}"]
+    security_group_ids = var.vpc_config["security_group_ids"]
+    subnet_ids         = var.vpc_config["subnet_ids"]
   }
 
   dead_letter_config {
