@@ -1,3 +1,7 @@
+locals {
+  vpc_config = var.vpc_config_enabled ? [var.vpc_config] : []
+}
+
 resource "aws_iam_role" "lambda" {
   name = "lambda-${var.function_name}-role"
 
@@ -37,8 +41,8 @@ EOF
 
 ## DEFAULT POLICY: Policies that all lambdas will have. Logging, dead letter, ... ##
 resource "aws_iam_role_policy_attachment" "default" {
-  role       = "${aws_iam_role.lambda.name}"
-  policy_arn = "${aws_iam_policy.default.arn}"
+  role       = aws_iam_role.lambda.name
+  policy_arn = aws_iam_policy.default.arn
 }
 
 resource "aws_iam_policy" "default" {
@@ -56,13 +60,13 @@ EOF
 
 # VPC POLICY: If the lambda runs inside a vpc, it needs specific policies to attache itself to the vpc ##
 resource "aws_iam_role_policy_attachment" "vpc" {
-  count      = "${var.vpc_config_enabled ? 1 : 0}"
-  role       = "${aws_iam_role.lambda.name}"
+  count      = var.vpc_config_enabled ? 1 : 0
+  role       = aws_iam_role.lambda.name
   policy_arn =  aws_iam_policy.vpc[0].arn
 }
 
 resource "aws_iam_policy" "vpc" {
-  count       = "${var.vpc_config_enabled ? 1 : 0}"
+  count       = var.vpc_config_enabled ? 1 : 0
   name        = "${var.function_name}-vpc"
   path        = "/"
   description = "VPC Policy"
@@ -92,8 +96,6 @@ data "archive_file" "zip" {
 }
 
 resource "aws_lambda_function" "lambda" {
-  count = "${var.vpc_config_enabled ? 0 : 1}"
-
   filename                       = "${data.archive_file.zip.output_path}"
   function_name                  = "${var.function_name}"
   role                           = "${aws_iam_role.lambda.arn}"
@@ -107,47 +109,25 @@ resource "aws_lambda_function" "lambda" {
   layers                         = var.layers
 
 
+  dynamic "vpc_config" {
+    for_each = local.vpc_config
+    content {
+      security_group_ids = vpc_config.value["security_group_ids"]
+      subnet_ids = vpc_config.value["subnet_ids"]
+    }
+  }
+
   environment {
-    variables = "${var.variables}"
+    variables = var.variables
   }
 
   dead_letter_config {
-    target_arn = "${aws_sqs_queue.dead_letter.arn}"
+    target_arn = aws_sqs_queue.dead_letter.arn
   }
 
-  depends_on = ["aws_iam_role_policy_attachment.default"]
+  depends_on = [aws_iam_role_policy_attachment.default, aws_iam_role_policy_attachment.vpc]
 }
 
-resource "aws_lambda_function" "lambda_vpc" {
-  count = "${var.vpc_config_enabled ? 1 : 0}"
-
-  filename                       = "${data.archive_file.zip.output_path}"
-  function_name                  = "${var.function_name}"
-  role                           = "${aws_iam_role.lambda.arn}"
-  handler                        = "${var.handler}"
-  source_code_hash               = filebase64sha256(data.archive_file.zip.output_path)
-  runtime                        = "${var.runtime}"
-  timeout                        = "${var.timeout}"
-  memory_size                    = "${var.memory_size}"
-  publish                        = "${var.provisioned_concurrent_executions > 0}"
-  reserved_concurrent_executions = "${var.reserved_concurrent_executions}"
-  layers                         = var.layers
-
-  environment {
-    variables = "${var.variables}"
-  }
-
-  vpc_config {
-    security_group_ids = var.vpc_config["security_group_ids"]
-    subnet_ids         = var.vpc_config["subnet_ids"]
-  }
-
-  dead_letter_config {
-    target_arn = "${aws_sqs_queue.dead_letter.arn}"
-  }
-
-  depends_on = ["aws_iam_role_policy_attachment.default", "aws_iam_role_policy_attachment.vpc"]
-}
 
 resource "aws_sqs_queue" "dead_letter" {
   name                      = "lambda-${var.function_name}-dead-letter"
@@ -156,8 +136,8 @@ resource "aws_sqs_queue" "dead_letter" {
 }
 
 resource "aws_lambda_provisioned_concurrency_config" "lambda_provisioned_concurrency_config" {
-  count                             = "${var.provisioned_concurrent_executions > 0 ? 1 : 0}"
-  function_name                     = "${element(concat(aws_lambda_function.lambda.*.function_name, aws_lambda_function.lambda_vpc.*.function_name),0)}"
-  provisioned_concurrent_executions = "${var.provisioned_concurrent_executions}"
-  qualifier                         = "${element(concat(aws_lambda_function.lambda.*.version, aws_lambda_function.lambda_vpc.*.version),0)}"
+  count                             = var.provisioned_concurrent_executions > 0 ? 1 : 0
+  function_name                     = aws_lambda_function.lambda.function_name
+  provisioned_concurrent_executions = var.provisioned_concurrent_executions
+  qualifier                         = aws_lambda_function.lambda.version
 }
