@@ -58,7 +58,7 @@ EOF
 resource "aws_iam_role_policy_attachment" "vpc" {
   count      = "${var.vpc_config_enabled ? 1 : 0}"
   role       = "${aws_iam_role.lambda.name}"
-  policy_arn = "${aws_iam_policy.vpc.arn}"
+  policy_arn =  aws_iam_policy.vpc[0].arn
 }
 
 resource "aws_iam_policy" "vpc" {
@@ -104,7 +104,7 @@ resource "aws_lambda_function" "lambda" {
   memory_size                    = "${var.memory_size}"
   publish                        = "${var.publish || var.provisioned_concurrent_executions > 0}"
   reserved_concurrent_executions = "${var.reserved_concurrent_executions}"
-  layers                         = ["${var.layers}"]
+  layers                         = var.layers
 
 
   environment {
