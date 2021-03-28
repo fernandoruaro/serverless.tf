@@ -30,7 +30,7 @@ variable "handler" {
 }
 
 variable "variables" {
-  type = "map"
+  type = map
 
   default = {
     EMPTY_ENVIRONMENT = true

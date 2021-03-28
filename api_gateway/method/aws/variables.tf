@@ -11,7 +11,7 @@ variable "authorizer_id" {
 }
 
 variable "request_parameters" {
-  type = "map"
+  type = map
 
   default = {}
 }
