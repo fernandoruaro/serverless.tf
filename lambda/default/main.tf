@@ -103,7 +103,7 @@ resource "aws_lambda_function" "default" {
   function_name                  = var.function_name
   role                           = aws_iam_role.lambda.arn
   handler                        = var.handler
-  source_code_hash               = var.path != null ? filebase64sha256(data.archive_file.zip[0].output_path) : sha256(var.s3_key)
+  source_code_hash               = var.source_code_hash != null ? var.source_code_hash : (var.path != null ? filebase64sha256(data.archive_file.zip[0].output_path) : sha256(var.s3_key))
   runtime                        = var.runtime
   timeout                        = var.timeout
   memory_size                    = var.memory_size

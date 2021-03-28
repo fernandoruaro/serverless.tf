@@ -34,5 +34,6 @@ module "default" {
   runtime                        = var.runtime
   memory_size                    = var.memory_size
   reserved_concurrent_executions = var.reserved_concurrent_executions
-  layers                            = var.layers
+  layers                         = var.layers
+  source_code_hash               = var.source_code_hash
 }

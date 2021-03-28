@@ -23,4 +23,5 @@ module "default" {
   provisioned_concurrent_executions = var.provisioned_concurrent_executions
   reserved_concurrent_executions    = var.reserved_concurrent_executions
   layers                            = var.layers
+  source_code_hash                  = var.source_code_hash
 }
