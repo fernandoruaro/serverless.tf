@@ -50,7 +50,7 @@ variable "vpc_config" {
 }
 
 variable "extra_policy_statements" {
-  type    = "list"
+  type    = list
   default = []
 }
 
@@ -67,6 +67,6 @@ variable "reserved_concurrent_executions" {
 }
 
 variable "layers" {
-  type    = "list"
+  type    = list
   default = []
 }

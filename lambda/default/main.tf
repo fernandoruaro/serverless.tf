@@ -92,7 +92,7 @@ EOF
 data "archive_file" "zip" {
   count       = var.path != null ? 1 : 0
   type        = "zip"
-  source_dir  = "${var.path}"
+  source_dir  = var.path
   output_path = ".terraform/zips/${var.function_name}.zip"
 }
 

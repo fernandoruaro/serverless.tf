@@ -50,7 +50,7 @@ variable "vpc_config" {
 }
 
 variable "extra_policy_statements" {
-  type    = "list"
+  type    = list
   default = []
 }
 
@@ -71,6 +71,6 @@ variable "starting_position" {
 }
 
 variable "layers" {
-  type    = "list"
+  type    = list
   default = []
 }
