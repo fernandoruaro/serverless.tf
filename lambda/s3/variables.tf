@@ -72,3 +72,8 @@ variable "layers" {
 variable "source_code_hash" {
   default = null
 }
+
+variable "trigger_events" {
+  type    = list
+  default = ["s3:ObjectCreated:*", "s3:ObjectRemoved:*"]
+}
