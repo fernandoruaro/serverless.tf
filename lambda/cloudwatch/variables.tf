@@ -73,5 +73,5 @@ variable "source_code_hash" {
 
 variable "tags" {
   default = {}
-  type    = map(list(string))
+  type    = map(string)
 }
