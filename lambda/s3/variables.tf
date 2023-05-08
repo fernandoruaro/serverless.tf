@@ -77,3 +77,8 @@ variable "trigger_events" {
   type    = list
   default = ["s3:ObjectCreated:*", "s3:ObjectRemoved:*"]
 }
+
+variable "tags" {
+  default = {}
+  type    = map(string)
+}
