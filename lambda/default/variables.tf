@@ -4,17 +4,17 @@ variable "function_name" {
 
 variable "path" {
   description = "The function's folder (the folder will be sent as the code for the lambda)"
-  default = null
+  default     = null
 }
 
 variable "s3_bucket" {
   description = "The function's s3 bucket"
-  default = null
+  default     = null
 }
 
 variable "s3_key" {
   description = "The function's s3 key"
-  default = null
+  default     = null
 }
 
 variable "handler" {
@@ -22,7 +22,7 @@ variable "handler" {
 }
 
 variable "variables" {
-  type = map
+  type = map(any)
 
   default = {
     EMPTY_ENVIRONMENT = true
@@ -39,11 +39,11 @@ variable "vpc_config_enabled" {
 
 variable "vpc_config" {
   default = {}
-  type = map(list(string))
+  type    = map(list(string))
 }
 
 variable "extra_policy_statements" {
-  type    = list
+  type    = list(any)
   default = []
 }
 
@@ -68,10 +68,15 @@ variable "publish" {
 }
 
 variable "layers" {
-  type    = list
+  type    = list(any)
   default = []
 }
 
 variable "source_code_hash" {
   default = null
+}
+
+variable "tags" {
+  default = {}
+  type    = map(list(string))
 }

@@ -53,7 +53,7 @@ resource "aws_iam_policy" "default" {
   policy = <<EOF
 {
   "Version": "2012-10-17",
-  "Statement": [${join(",",compact(concat(local.default_statements,var.extra_policy_statements)))}]
+  "Statement": [${join(",", compact(concat(local.default_statements, var.extra_policy_statements)))}]
 }
 EOF
 }
@@ -62,7 +62,7 @@ EOF
 resource "aws_iam_role_policy_attachment" "vpc" {
   count      = var.vpc_config_enabled ? 1 : 0
   role       = aws_iam_role.lambda.name
-  policy_arn =  aws_iam_policy.vpc[0].arn
+  policy_arn = aws_iam_policy.vpc[0].arn
 }
 
 resource "aws_iam_policy" "vpc" {
@@ -110,13 +110,14 @@ resource "aws_lambda_function" "default" {
   publish                        = var.publish || var.provisioned_concurrent_executions > 0
   reserved_concurrent_executions = var.reserved_concurrent_executions
   layers                         = var.layers
+  tags                           = var.tags
 
 
   dynamic "vpc_config" {
     for_each = local.vpc_config
     content {
       security_group_ids = vpc_config.value["security_group_ids"]
-      subnet_ids = vpc_config.value["subnet_ids"]
+      subnet_ids         = vpc_config.value["subnet_ids"]
     }
   }
 
