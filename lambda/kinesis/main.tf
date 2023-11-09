@@ -4,6 +4,7 @@ resource "aws_lambda_event_source_mapping" "lambda" {
   enabled           = true
   function_name     = module.default.lambda_arn
   starting_position = "TRIM_HORIZON"
+  parallelization_factor = var.parallelization_factor
 }
 
 locals {

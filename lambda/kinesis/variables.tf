@@ -79,3 +79,7 @@ variable "tags" {
   default = {}
   type    = map(string)
 }
+
+variable "parallelization_factor" {
+  default = 4
+}
